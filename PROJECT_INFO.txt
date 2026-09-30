@@ -1,0 +1,29 @@
+VARIO WIDGET PROJECT
+
+Version: 1.6
+
+Targets are now separated:
+
+1. Vario
+   iPhone application
+
+2. VarioWidgetExtension
+   WidgetKit extension
+
+Shared App Group:
+group.com.pavel.vario
+
+Shared data:
+VarioPacket v1
+
+Architecture:
+
+Android VARIO
+    |
+    | Transport
+    v
+iPhone VARIO App
+    |
+    | App Group
+    v
+VARIO Widget

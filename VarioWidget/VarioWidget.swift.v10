@@ -1,0 +1,308 @@
+import WidgetKit
+import SwiftUI
+
+struct VarioEntry: TimelineEntry {
+
+    let date: Date
+    let data: VarioLiveData
+}
+
+struct VarioProvider: TimelineProvider {
+
+    func placeholder(
+        in context: Context
+    ) -> VarioEntry {
+
+        VarioEntry(
+            date: Date(),
+            data: .preview
+        )
+    }
+
+    func getSnapshot(
+        in context: Context,
+        completion: @escaping (VarioEntry) -> Void
+    ) {
+
+        completion(
+            VarioEntry(
+                date: Date(),
+                data: .preview
+            )
+        )
+    }
+
+    func getTimeline(
+        in context: Context,
+        completion: @escaping (Timeline<VarioEntry>) -> Void
+    ) {
+
+        let data = VarioDataStore.shared.data
+
+        let entry = VarioEntry(
+            date: Date(),
+            data: data
+        )
+
+        let refreshDate =
+            Calendar.current.date(
+                byAdding: .minute,
+                value: 15,
+                to: Date()
+            )!
+
+        completion(
+            Timeline(
+                entries: [entry],
+                policy: .after(refreshDate)
+            )
+        )
+    }
+}
+
+struct VarioWidgetView: View {
+
+    let entry: VarioEntry
+
+    @Environment(\.widgetFamily)
+    private var family
+
+    var body: some View {
+
+        ZStack {
+
+            LinearGradient(
+                colors: [
+                    Color.black,
+                    Color(
+                        red: 0.07,
+                        green: 0.09,
+                        blue: 0.12
+                    )
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            VStack(
+                alignment: .leading,
+                spacing: 0
+            ) {
+
+                header
+
+                Spacer(minLength: 4)
+
+                mainVario
+
+                Spacer(minLength: 6)
+
+                VarioGauge(
+                    value:
+                        entry.data.verticalSpeed
+                )
+
+                Spacer(minLength: 6)
+
+                bottomData
+            }
+            .padding(14)
+        }
+    }
+
+    private var header: some View {
+
+        HStack {
+
+            HStack(spacing: 6) {
+
+                Image(
+                    systemName:
+                        "location.north.fill"
+                )
+                .font(
+                    .system(
+                        size: 12,
+                        weight: .bold
+                    )
+                )
+
+                Text("VARIO")
+                    .font(
+                        .system(
+                            size: 16,
+                            weight: .black
+                        )
+                    )
+                    .tracking(1.5)
+            }
+
+            Spacer()
+
+            Text(
+                entry.data.stateText
+            )
+            .font(
+                .system(
+                    size: 9,
+                    weight: .bold
+                )
+            )
+            .tracking(0.8)
+            .foregroundStyle(.secondary)
+        }
+    }
+
+    private var mainVario: some View {
+
+        HStack(
+            alignment: .lastTextBaseline,
+            spacing: 7
+        ) {
+
+            Image(
+                systemName:
+                    entry.data.directionSymbol
+            )
+            .font(
+                .system(
+                    size: 20,
+                    weight: .bold
+                )
+            )
+
+            Text(
+                entry.data.formattedVerticalSpeed
+            )
+            .font(
+                .system(
+                    size: 42,
+                    weight: .heavy
+                )
+            )
+            .monospacedDigit()
+
+            Text("m/s")
+                .font(
+                    .system(
+                        size: 11,
+                        weight: .semibold
+                    )
+                )
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var bottomData: some View {
+
+        HStack(spacing: 10) {
+
+            dataBlock(
+                title: "ALT",
+                value:
+                    entry.data.formattedAltitude,
+                unit: "m"
+            )
+
+            Spacer()
+
+            dataBlock(
+                title: "PRESS",
+                value:
+                    entry.data.formattedPressure,
+                unit: "hPa"
+            )
+
+            if family == .systemMedium {
+
+                Spacer()
+
+                dataBlock(
+                    title: "TEMP",
+                    value:
+                        entry.data.formattedTemperature,
+                    unit: "°C"
+                )
+
+                Spacer()
+
+                dataBlock(
+                    title: "BAT",
+                    value:
+                        entry.data.formattedBattery,
+                    unit: "%"
+                )
+            }
+        }
+    }
+
+    private func dataBlock(
+        title: String,
+        value: String,
+        unit: String
+    ) -> some View {
+
+        VStack(
+            alignment: .leading,
+            spacing: 1
+        ) {
+
+            Text(title)
+                .font(
+                    .system(
+                        size: 8,
+                        weight: .bold
+                    )
+                )
+                .foregroundStyle(.secondary)
+
+            HStack(
+                alignment: .lastTextBaseline,
+                spacing: 2
+            ) {
+
+                Text(value)
+                    .font(
+                        .system(
+                            size: 13,
+                            weight: .bold
+                        )
+                    )
+                    .monospacedDigit()
+
+                Text(unit)
+                    .font(
+                        .system(size: 8)
+                    )
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+@main
+struct VarioWidget: Widget {
+
+    let kind = "VarioWidget"
+
+    var body: some WidgetConfiguration {
+
+        StaticConfiguration(
+            kind: kind,
+            provider: VarioProvider()
+        ) { entry in
+
+            VarioWidgetView(
+                entry: entry
+            )
+        }
+        .configurationDisplayName("VARIO")
+        .description(
+            "Высота, вертикальная скорость и давление."
+        )
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium
+        ])
+    }
+}
