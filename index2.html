@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KD PILOT Widget</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #0b1116;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+    color: #ffffff;
+  }
+
+  .widget {
+    width: 100%;
+    max-width: 420px;
+    background: linear-gradient(160deg, #1b242c 0%, #13191f 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px;
+    padding: 6.5%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
+  }
+
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .time-block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .time {
+    font-size: clamp(36px, 11.5vw, 52px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  .date {
+    font-size: clamp(13px, 3.8vw, 16px);
+    font-weight: 500;
+    color: #9aa6b2;
+    margin-top: 8px;
+    white-space: nowrap;
+  }
+
+  .brand {
+    font-size: clamp(22px, 6.8vw, 32px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    padding-top: 4px;
+  }
+
+  .brand-kd {
+    color: #facc15;
+  }
+
+  .brand-pilot {
+    color: #ffffff;
+  }
+
+  .flight-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .paraglider-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  .flight-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .flight-title {
+    font-size: clamp(13px, 3.7vw, 15px);
+    font-weight: 500;
+    color: #cbd5e1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .spot-highlight {
+    color: #facc15;
+    font-weight: 700;
+  }
+
+  .flight-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+
+  .flight-time {
+    font-size: clamp(15px, 4.3vw, 19px);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .tomorrow-white {
+    color: #ffffff;
+  }
+
+  .time-yellow {
+    color: #facc15;
+  }
+
+  .meta-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.16);
+    flex-shrink: 0;
+  }
+
+  .pilots-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: clamp(15px, 4.3vw, 18px);
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  .pilots-icon {
+    width: 18px;
+    height: 18px;
+    fill: #9aa6b2;
+    flex-shrink: 0;
+  }
+
+  .spot-card {
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.14) 0%, rgba(6, 78, 59, 0.25) 100%);
+    border: 1.5px solid #22c55e;
+    box-shadow: 0 0 22px rgba(34, 197, 94, 0.22), inset 0 0 12px rgba(34, 197, 94, 0.1);
+    border-radius: 22px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .check-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #22c55e;
+    background: rgba(34, 197, 94, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    stroke: #22c55e;
+    stroke-width: 2.8;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .spot-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .spot-name {
+    font-size: clamp(19px, 5.4vw, 23px);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.15;
+  }
+
+  .spot-weather {
+    font-size: clamp(11.5px, 3.2vw, 13.5px);
+    font-weight: 400;
+    color: #d1fae5;
+    line-height: 1.35;
+  }
+</style>
+</head>
+<body>
+
+<div class="widget">
+  <div class="top-row">
+    <div class="time-block">
+      <div class="time">10:24</div>
+      <div class="date">Сб, 22 нояб.</div>
+    </div>
+    <div class="brand"><span class="brand-kd">KD</span> <span class="brand-pilot">PILOT</span></div>
+  </div>
+
+  <div class="flight-card">
+    <svg class="paraglider-icon" viewBox="0 0 48 48" fill="none">
+      <path d="M6 16C12 8 36 8 42 16C34 14 14 14 6 16Z" stroke="#ffffff" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M6 16L24 35L42 16" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.8"/>
+      <path d="M15 15L24 35L33 15" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.8"/>
+      <path d="M24 14.5V35" stroke="#ffffff" stroke-width="1.6" stroke-opacity="0.8"/>
+      <circle cx="24" cy="38" r="2.2" fill="#ffffff"/>
+      <path d="M21 43L24 40L27 43" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="flight-info">
+      <div class="flight-title">Ближайший полет: <span class="spot-highlight">Девау</span></div>
+      <div class="flight-meta">
+        <div class="flight-time"><span class="tomorrow-white">Завтра |</span> <span class="time-yellow">12:00</span></div>
+        <div class="meta-divider"></div>
+        <div class="pilots-badge">
+          <svg class="pilots-icon" viewBox="0 0 24 24">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+          </svg>
+          <span>12</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spot-card">
+    <div class="check-circle">
+      <svg class="check-icon" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div class="spot-details">
+      <div class="spot-name">Сокольники</div>
+      <div class="spot-weather">Ветер: СЗ(315°), 10 м/с(6 м/с) влажность:0, T:24°C время: 16:00 до 20-00</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
