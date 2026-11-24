@@ -45,6 +45,15 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             | tee "$RUNNER_TEMP/VARIO-xcodebuild.log"
 
+      - name: Export simulator screenshots
+        if: always()
+        run: |
+          if [ -d "$RUNNER_TEMP/VARIO-UI-Tests.xcresult" ]; then
+            xcrun xcresulttool export attachments \
+              --path "$RUNNER_TEMP/VARIO-UI-Tests.xcresult" \
+              --output-path "$RUNNER_TEMP/VARIO-attachments"
+          fi
+
       - name: Upload test report and screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -52,6 +61,7 @@ jobs:
           name: vario-ios-ui-test-results
           path: |
             ${{ runner.temp }}/VARIO-UI-Tests.xcresult
+            ${{ runner.temp }}/VARIO-attachments
             ${{ runner.temp }}/VARIO-xcodebuild.log
           if-no-files-found: warn
           retention-days: 14
