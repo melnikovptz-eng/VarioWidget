@@ -9,6 +9,12 @@
     <key>CFBundleDisplayName</key>
     <string>VARIO</string>
 
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+
     <key>CFBundleIdentifier</key>
     <string>com.pavel.vario</string>
 

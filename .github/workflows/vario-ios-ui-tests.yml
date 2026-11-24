@@ -1,0 +1,67 @@
+name: VARIO iOS UI Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ios-ui-tests:
+    name: Build and UI test (iOS Simulator)
+    runs-on: macos-15
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          xcodebuild -version
+          xcrun simctl list devices available
+
+      - name: Install XcodeGen
+        run: |
+          if ! command -v xcodegen >/dev/null 2>&1; then
+            brew install xcodegen
+          fi
+          xcodegen --version
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build and run UI tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project VarioWidget.xcodeproj \
+            -scheme Vario \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -resultBundlePath "$RUNNER_TEMP/VARIO-UI-Tests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee "$RUNNER_TEMP/VARIO-xcodebuild.log"
+
+      - name: Export simulator screenshots
+        if: always()
+        run: |
+          if [ -d "$RUNNER_TEMP/VARIO-UI-Tests.xcresult" ]; then
+            xcrun xcresulttool export attachments \
+              --path "$RUNNER_TEMP/VARIO-UI-Tests.xcresult" \
+              --output-path "$RUNNER_TEMP/VARIO-attachments"
+          fi
+
+      - name: Upload test report and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vario-ios-ui-test-results
+          path: |
+            ${{ runner.temp }}/VARIO-UI-Tests.xcresult
+            ${{ runner.temp }}/VARIO-attachments
+            ${{ runner.temp }}/VARIO-xcodebuild.log
+          if-no-files-found: warn
+          retention-days: 14

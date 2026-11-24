@@ -144,7 +144,9 @@ final class VarioDataStore {
         altitude: Double,
         pressure: Double,
         temperature: Double?,
-        battery: Int?
+        battery: Int?,
+        timestamp: Date = Date(),
+        isConnected: Bool = true
     ) {
 
         data = VarioLiveData(
@@ -153,8 +155,8 @@ final class VarioDataStore {
             pressure: pressure,
             temperature: temperature,
             battery: battery,
-            timestamp: Date(),
-            isConnected: true
+            timestamp: timestamp,
+            isConnected: isConnected
         )
     }
 

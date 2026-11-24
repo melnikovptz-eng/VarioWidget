@@ -40,3 +40,29 @@ targets:
       CODE_SIGN_ENTITLEMENTS: WidgetSources/Vario.entitlements
 
     dependencies: []
+
+  VarioUITests:
+    type: bundle.ui-testing
+    platform: iOS
+
+    sources:
+      - path: UITests
+
+    dependencies:
+      - target: Vario
+
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.pavel.vario.uitests
+      GENERATE_INFOPLIST_FILE: YES
+      TEST_TARGET_NAME: Vario
+
+schemes:
+  Vario:
+    build:
+      targets:
+        Vario: all
+        VarioWidgetExtension: all
+    test:
+      config: Debug
+      targets:
+        - VarioUITests

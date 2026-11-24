@@ -9,6 +9,12 @@
     <key>CFBundleDisplayName</key>
     <string>VARIO Widget</string>
 
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+
     <key>CFBundleIdentifier</key>
     <string>com.pavel.vario.widget</string>
 
@@ -27,8 +33,6 @@
         <key>NSExtensionPointIdentifier</key>
         <string>com.apple.widgetkit-extension</string>
 
-        <key>NSExtensionPrincipalClass</key>
-        <string>$(PRODUCT_MODULE_NAME).VarioWidgetBundle</string>
 
     </dict>
 
