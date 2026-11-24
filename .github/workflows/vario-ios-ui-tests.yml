@@ -1,10 +1,6 @@
 name: VARIO iOS UI Tests
 
 on:
-  push:
-    branches:
-      - main
-      - "ci/**"
   pull_request:
     branches:
       - main
